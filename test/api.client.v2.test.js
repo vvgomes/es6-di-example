@@ -3,6 +3,14 @@ import { expect } from "chai";
 import { stub, match } from "sinon";
 
 describe("api client v2", () => {
+  let fakeFetch;
+  let client;
+
+  beforeEach(() => {
+    fakeFetch = stub();
+    client = createApiClient(fakeFetch)
+  });
+
   describe("fetchTodos()", () => {
     it("retrieves a list of todos from the api", () => {
       const fakeResponse = Promise.resolve({
@@ -14,11 +22,7 @@ describe("api client v2", () => {
         }])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
-
-      const client = createApiClient(fetch);
+      fakeFetch.withArgs("/api/todos").returns(fakeResponse); 
 
       return client.fetchTodos().then(todos => {
         expect(todos).deep.eq([{
@@ -46,11 +50,7 @@ describe("api client v2", () => {
         })
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos", requestData)
-        .returns(fakeResponse); 
-
-      const client = createApiClient(fetch);
+      fakeFetch.withArgs("/api/todos", requestData).returns(fakeResponse); 
 
       return client.addTodo({ text: "wash dishes" }).then(todo => {
         expect(todo).deep.eq({
@@ -74,11 +74,7 @@ describe("api client v2", () => {
         ])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos", requestData)
-        .returns(fakeResponse); 
-
-      const client = createApiClient(fetch);
+      fakeFetch.withArgs("/api/todos", requestData).returns(fakeResponse); 
 
       return client.addTodo({ text: "" }).catch(errors => {
         expect(errors).deep.eq([
@@ -99,11 +95,7 @@ describe("api client v2", () => {
         })
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
-
-      const client = createApiClient(fetch);
+      fakeFetch.withArgs("/api/todos/1").returns(fakeResponse); 
 
       return client.toggleTodo({ id: "1" }).then(todo => {
         expect(todo).deep.eq({
@@ -122,11 +114,7 @@ describe("api client v2", () => {
         ])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
-
-      const client = createApiClient(fetch);
+      fakeFetch.withArgs("/api/todos/3").returns(fakeResponse); 
 
       return client.toggleTodo({ id: "3" }).catch(errors => {
         expect(errors).deep.eq([

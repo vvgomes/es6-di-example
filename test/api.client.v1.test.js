@@ -3,6 +3,12 @@ import { expect } from "chai";
 import { stub, match } from "sinon";
 
 describe("api client v1", () => {
+  let fakeFetch;
+
+  beforeEach(() => {
+    fakeFetch = stub();
+  });
+
   describe("fetchTodos()", () => {
     it("retrieves a list of todos from the api", () => {
       const fakeResponse = Promise.resolve({
@@ -14,11 +20,9 @@ describe("api client v1", () => {
         }])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
+      fakeFetch.withArgs("/api/todos").returns(fakeResponse); 
 
-      return client.fetchTodos(fetch).then(todos => {
+      return client.fetchTodos(fakeFetch).then(todos => {
         expect(todos).deep.eq([{
           id: "1",
           text: "walk the dog",
@@ -44,11 +48,9 @@ describe("api client v1", () => {
         })
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos", requestData)
-        .returns(fakeResponse); 
+      fakeFetch.withArgs("/api/todos", requestData).returns(fakeResponse); 
 
-      return client.addTodo({ text: "wash dishes" }, fetch).then(todo => {
+      return client.addTodo({ text: "wash dishes" }, fakeFetch).then(todo => {
         expect(todo).deep.eq({
           id: "2",
           text: "wash dishes",
@@ -70,11 +72,9 @@ describe("api client v1", () => {
         ])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos", requestData)
-        .returns(fakeResponse); 
+      fakeFetch.withArgs("/api/todos", requestData).returns(fakeResponse); 
 
-      return client.addTodo({ text: "" }, fetch).catch(errors => {
+      return client.addTodo({ text: "" }, fakeFetch).catch(errors => {
         expect(errors).deep.eq([
           "Text description must be present."
         ]);
@@ -93,11 +93,9 @@ describe("api client v1", () => {
         })
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
+      fakeFetch.withArgs("/api/todos/1").returns(fakeResponse); 
 
-      return client.toggleTodo({ id: "1" }, fetch).then(todo => {
+      return client.toggleTodo({ id: "1" }, fakeFetch).then(todo => {
         expect(todo).deep.eq({
           id: "1",
           text: "walk the dog",
@@ -114,17 +112,14 @@ describe("api client v1", () => {
         ])
       });
 
-      const fetch = stub()
-        .withArgs("/api/todos")
-        .returns(fakeResponse); 
+      fakeFetch.withArgs("/api/todos/3").returns(fakeResponse); 
 
-      return client.toggleTodo({ id: "3" }, fetch).catch(errors => {
+      return client.toggleTodo({ id: "3" }, fakeFetch).catch(errors => {
         expect(errors).deep.eq([
           "Todo not found."
         ]);
       });
     });
-
   });
 });
 
