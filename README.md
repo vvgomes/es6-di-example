@@ -1,6 +1,6 @@
 # ES6 Dependency Injection
 
-Here you find the complete source code for the examples in my [blog post](http://vvgomes.com/js-dependency-injection) about the topic.
+Here you find the complete source code for the examples in my [blog post](http://vvgomes.com/javascript-dependency-injection/) about the topic.
 
 ## Running the Tests
 
